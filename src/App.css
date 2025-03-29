@@ -1,0 +1,27 @@
+.app {
+  text-align: center;
+  padding: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dog-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.dog-card p {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.ban-list ul {
+  list-style: none;
+  padding: 0;
+}
