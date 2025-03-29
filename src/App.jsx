@@ -4,7 +4,7 @@ import DogCard from "./components/DogCard";
 import BanList from "./components/BanList";
 import "./App.css";
 
-const API_URL = "https://api.thecatapi.com/v1/images/0XYvRd7oD";
+const API_URL = "https://api.thedogapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=10";
 const ACCESS_KEY = import.meta.env.VITE_APP_ACCESS_KEY;
 
 function App() {
@@ -13,48 +13,39 @@ function App() {
 
   useEffect(() => {
     fetchDog();
-  }, []);
+  }, []);  
 
-  const fetchDog = async () => {
-    try {
-      const response = await axios.get(API_URL, {
-        headers: { 'x-api-key': ACCESS_KEY }
-      });
-
-      const newDog = response.data[0];
+  const headers = new Headers({
+    "x-api-key": ACCESS_KEY
+  });
   
-      if (newDog && newDog.breeds && newDog.breeds.length > 0) {
-        const breed = newDog.breeds[0].name;
-        if (banList.includes(breed)) {
-          fetchDog();
-          return;
-        }
-      } else {
-        setDog(newDog);
-        return;
-      }
-
-      setDog(newDog);
-    } catch (error) {
-      console.error("Error fetching dog:", error);
-    }
-  };  
-
-
-  const handleBan = (breed) => {
-    setBanList([...banList, breed]);
+  var requestOptions = {
+    method: 'GET',
+    headers: headers,
+    redirect: 'follow'
   };
+  
+  const fetchDog =  async () => {
+    let index = Math.floor(Math.random() * 10);
+    const response = await fetch(API_URL, requestOptions);
+    const result = await response.json();
 
-  const handleUnban = (breed) => {
-    setBanList(banList.filter((b) => b !== breed));
-  };
+    console.log(result[index]);
+
+    const dogData = result[0];
+
+    setDog({
+      imageUrl: dogData.url
+    })
+  };      
 
   return (
-    <div className="app">
-      <h1>Dog Discovery</h1>
-      <button onClick={fetchDog}>Discover Another Dog</button>
-      {dog && <DogCard dog={dog} addToBanList={handleBan} />}
-      <BanList banList={banList} />
+      <div className="app">
+      <h1>dog discovery</h1>
+      <h3>woof!</h3>
+      <button onClick={fetchDog}>discover</button>
+
+      {dog && <DogCard imageUrl={dog.imageUrl} />}
     </div>
   );
 }
